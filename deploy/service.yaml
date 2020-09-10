@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kingbase
+  namespace: cloud-service
+spec:
+  ports:
+    - name: port0
+      protocol: TCP
+      port: 54321
+      targetPort: 54321
+  selector:
+    ccyunchina.com/app: kingbase
+  type: NodePort

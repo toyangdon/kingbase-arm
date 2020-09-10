@@ -1,0 +1,66 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: kingbase
+  namespace: cloud-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      ccyunchina.com/app: kingbase
+  template:
+    metadata:
+      labels:
+        ccyunchina.com/app: kingbase
+    spec:
+      volumes:
+        - name: vol-data
+          persistentVolumeClaim:
+            claimName: kingbase
+        - name: king-base-config
+          configMap:
+            name: kingbase
+            defaultMode: 511
+      initContainers:
+        - name: init-containers
+          image: dockerhub.ccyunchina.com/toyangdon/busybox
+          command:
+            - sh
+            - '-c'
+            - 'chown 1000:1000 /home/kingbase/data'
+          volumeMounts:
+            - name: vol-data
+              mountPath: /home/kingbase/data
+            - name: king-base-config
+              mountPath: /home/kingbase/kdb/Server/bin/license.dat
+              subPath: license.dat
+      containers:
+        - name: container
+          image: 'dockerhub.ccyunchina.com/toyangdon/kingbase:v8r3'
+          env:
+            - name: SYSTEM_PWD
+              value: a111111111 #changeit
+          resources:
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: 250m
+              memory: 512Mi
+          volumeMounts:
+            - name: vol-data
+              mountPath: /home/kingbase/data
+            - name: king-base-config
+              mountPath: /home/kingbase/kdb/Server/bin/license.dat
+              subPath: license.dat
+          livenessProbe:
+            tcpSocket:
+              port: 54321
+            initialDelaySeconds: 120
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
