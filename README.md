@@ -1,8 +1,8 @@
-# kingbase-arm64 用于测试
+# kingbase-arm64 容器镜像用于测试
 人大金仓数据库容器镜像构建，arm64环境，版本v8r3
 # Build
 `git clone https://github.com/toyangdon/kingbase-arm.git`  
-`cd kingbase-arm`
+`cd kingbase-arm`  
 `docker build -t kingbase:v8r3 .`
 # Deploy
 ## Docker
