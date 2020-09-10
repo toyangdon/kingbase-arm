@@ -4,12 +4,12 @@
 `docker build -t kingbase:v8r3 .`
 # Deploy
 ## Docker
-`docker run -d –name xxxxx -p 54321:54321 -e SYSTEM_PWD=123456 -v /data/xxx: /home/kingbase/data -v /xxx/license.dat: /home/kingbase/kdb/Server/bin/license.dat dockerhub.ccyunchina.com/toyangdon/kingbase:v8r3`
+`docker run -d –name xxxxx -p 54321:54321 -e SYSTEM_PWD=123456 -v /data/xxx: /home/kingbase/data -v /xxx/license.dat: /home/kingbase/kdb/Server/bin/license.dat dockerhub.ccyunchina.com/toyangdon/kingbase:v8r3`  
 *数据目录用户id、组id为1000、1000*  
 *license文件可以在人大金仓官网下载*  
 ## Kubernetes
-修改./deploy/configmap.yaml，替换里面的license内容
-`kubectl apply -f ./deploy`
-## test
-### jdbc
-jdbc:kingbase8://<server>:<port54321>/<database>
+修改./deploy/configmap.yaml，替换里面的license内容  
+`kubectl apply -f ./deploy/*.yaml`
+## Test
+### JDBC
+`jdbc:kingbase8://<server>:<port54321>/<database>`
