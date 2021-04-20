@@ -15,7 +15,11 @@ db_init(){
   mkdir -p ${DATA_DIR}
   chown -R kingbase:kingbase ${DATA_DIR}
   cd ${DB_PATH}/Server/bin/
-  ./initdb -USYSTEM -W${SYSTEM_PWD-123456} -E UTF8 ${DATA_DIR}
+  extraParams=""
+  if [ "${CASE_INSENSITIVE}" == "true" ];then
+    extraParams="--case-insensitive"
+  fi
+  ./initdb -USYSTEM -W${SYSTEM_PWD-123456} -E UTF8 ${DATA_DIR} ${extraParams}
 }
 
 check_is_init
@@ -25,6 +29,10 @@ if [ -z "${DATABASE_ALREADY_EXISTS}" ];then
     echo "initdb failed"
     exit 1
   fi
+fi
+
+if [ -f "${DB_PATH}/Server/bin/license.dat" ];then
+  cp ${DB_PATH}/Server/bin/license.dat ${DB_PATH}/
 fi
 
 ${DB_PATH}/Server/bin/sys_ctl -D ${DATA_DIR} -l ${LOG_FILE} start
